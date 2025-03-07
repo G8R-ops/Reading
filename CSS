@@ -1,0 +1,19 @@
+/* CSS */
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  padding: 50px;
+  background-color: #f4f4f4;
+}
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  margin: 20px;
+  cursor: pointer;
+}
+#dyslexiaText {
+  margin: 30px auto;
+  max-width: 600px;
+  font-size: 20px;
+  line-height: 1.6;
+}
