@@ -35,6 +35,7 @@ img,svg,video{max-width:100%;height:auto}
 
 /* Header highlight over “can’t read” */
 .hero__title .hl{
+  position:relative;
   display:inline-block;
   padding:0 .15em;
   border-radius:.25em;
