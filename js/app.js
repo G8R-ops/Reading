@@ -226,33 +226,44 @@ const spendColor = thresholdScale(SPEND_THRESHOLDS, COLORS);
 
 /***** GEOGRAPHIC MAP *****/
 (function wireGeoMap(){
-  const svg = document.getElementById("usMap");
-  if (!svg) return;
+  const container = document.getElementById("mapContainer");
   const tooltip = document.getElementById("tooltip");
-  if (!tooltip) return;
+  const holder = document.getElementById("map");
+  if (!container || !tooltip || !holder) return;
 
-  svg.querySelectorAll("[data-abbr]").forEach(path=>{
-    const abbr = path.getAttribute("data-abbr");
-    const val = NAEP[abbr];
-    if (val == null) path.classList.add("no-data");
-    else path.style.fill = profColor(val);
+  fetch("image/us-map.svg")
+    .then(r => r.text())
+    .then(svgText => {
+      holder.innerHTML = svgText;
+      const svg = holder.querySelector("svg");
+      if (!svg) return;
+      svg.id = "usMap";
+      svg.removeAttribute("width");
+      svg.removeAttribute("height");
 
-    path.addEventListener("mouseenter", e=> showTip(e, abbr, val));
-    path.addEventListener("mousemove", e=> moveTip(e));
-    path.addEventListener("mouseleave", ()=> { tooltip.hidden = true; });
-  });
+      svg.querySelectorAll("[data-id]").forEach(path => {
+        const abbr = path.getAttribute("data-id");
+        const val = NAEP[abbr];
+        if (val == null) path.classList.add("no-data");
+        else path.style.fill = profColor(val);
+
+        path.addEventListener("mouseenter", e => showTip(e, abbr, val));
+        path.addEventListener("mousemove", moveTip);
+        path.addEventListener("mouseleave", () => { tooltip.hidden = true; });
+      });
+    });
 
   function showTip(e, abbr, val){
     const name = STATE_NAMES[abbr] || abbr;
-    tooltip.innerHTML = `<div class="tip-title"><strong>${name} (${abbr})</strong></div>
-      <div>${val==null?'N/A':val.toFixed(1)+'%'} can read at grade level</div>`;
+    tooltip.innerHTML = `<div class="tip-title"><strong>${name} (${abbr})</strong></div>` +
+      `<div>${val==null?'N/A':val.toFixed(1)+'%'} can read at grade level</div>`;
     tooltip.hidden = false;
     moveTip(e);
   }
   function moveTip(e){
-    const container = document.getElementById("mapContainer").getBoundingClientRect();
-    const x = Math.max(12, Math.min(e.clientX - container.left + 12, container.width - 10));
-    const y = Math.max(12, Math.min(e.clientY - container.top - 14, container.height - 12));
+    const rect = container.getBoundingClientRect();
+    const x = Math.max(12, Math.min(e.clientX - rect.left + 12, rect.width - 10));
+    const y = Math.max(12, Math.min(e.clientY - rect.top - 14, rect.height - 12));
     tooltip.style.left = x + "px";
     tooltip.style.top = y + "px";
   }
