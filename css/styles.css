@@ -35,12 +35,24 @@ img,svg,video{max-width:100%;height:auto}
 
 /* Header highlight over “can’t read” */
 .hero__title .hl{
-  position:relative;display:inline-block;padding:0 .15em;border-radius:.25em;transition:color .2s;
+  position:relative;
+  display:inline-block;
+  padding:0 .15em;
+  border-radius:.25em;
+  transition:color .2s 200ms;
+  z-index:0;
 }
 .hero__title .hl .sweep{
-  position:absolute;inset:0;background:var(--accent);
-  transform-origin:left;transform:scaleX(0);
-  border-radius:.25em;z-index:-1;
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:.55em;
+  background:var(--accent);
+  transform-origin:left;
+  transform:scaleX(0);
+  border-radius:.25em;
+  z-index:-1;
 }
 .animate-hl .hero__title .hl{ color:#111; }
 .animate-hl .hero__title .hl .sweep{
