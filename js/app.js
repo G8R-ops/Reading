@@ -226,21 +226,28 @@ const spendColor = thresholdScale(SPEND_THRESHOLDS, COLORS);
 
 /***** GEOGRAPHIC MAP *****/
 (function wireGeoMap(){
-  const svg = document.getElementById("usMap");
-  if (!svg) return;
+  const container = document.getElementById("usMap");
   const tooltip = document.getElementById("tooltip");
-  if (!tooltip) return;
+  if (!container || !tooltip) return;
 
-  svg.querySelectorAll("[data-abbr]").forEach(path=>{
-    const abbr = path.getAttribute("data-abbr");
-    const val = NAEP[abbr];
-    if (val == null) path.classList.add("no-data");
-    else path.style.fill = profColor(val);
+  fetch("image/us-map.svg")
+    .then(r => r.text())
+    .then(txt => {
+      container.innerHTML = txt;
+      const svg = container.querySelector("svg");
+      if (!svg) return;
 
-    path.addEventListener("mouseenter", e=> showTip(e, abbr, val));
-    path.addEventListener("mousemove", e=> moveTip(e));
-    path.addEventListener("mouseleave", ()=> { tooltip.hidden = true; });
-  });
+      svg.querySelectorAll("[data-abbr]").forEach(path=>{
+        const abbr = path.getAttribute("data-abbr");
+        const val = NAEP[abbr];
+        if (val == null) path.classList.add("no-data");
+        else path.style.fill = profColor(val);
+
+        path.addEventListener("mouseenter", e=> showTip(e, abbr, val));
+        path.addEventListener("mousemove", e=> moveTip(e));
+        path.addEventListener("mouseleave", ()=> { tooltip.hidden = true; });
+      });
+    });
 
   function showTip(e, abbr, val){
     const name = STATE_NAMES[abbr] || abbr;
@@ -250,9 +257,9 @@ const spendColor = thresholdScale(SPEND_THRESHOLDS, COLORS);
     moveTip(e);
   }
   function moveTip(e){
-    const container = document.getElementById("mapContainer").getBoundingClientRect();
-    const x = Math.max(12, Math.min(e.clientX - container.left + 12, container.width - 10));
-    const y = Math.max(12, Math.min(e.clientY - container.top - 14, container.height - 12));
+    const rect = document.getElementById("mapContainer").getBoundingClientRect();
+    const x = Math.max(12, Math.min(e.clientX - rect.left + 12, rect.width - 10));
+    const y = Math.max(12, Math.min(e.clientY - rect.top - 14, rect.height - 12));
     tooltip.style.left = x + "px";
     tooltip.style.top = y + "px";
   }
