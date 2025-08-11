@@ -39,23 +39,31 @@ img,svg,video{max-width:100%;height:auto}
   display:inline-block;
   padding:0 .15em;
   border-radius:.25em;
-  background:linear-gradient(var(--accent),var(--accent)) 0 100%/0 0.55em no-repeat;
-  transition:color .2s 200ms, background-size 1200ms cubic-bezier(.22,1,.36,1) 200ms;
+  transition:color .2s 200ms;
+  z-index:0;
 }
-.animate-hl .hero__title .hl{
-  color:#111;
-  background-size:100% 0.55em;
+.hero__title .hl .sweep{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:0;
+  height:.55em;
+  background:var(--accent);
+  transform-origin:left;
+  transform:scaleX(0);
+  border-radius:.25em;
+  z-index:-1;
+  transition:transform 1200ms cubic-bezier(.22,1,.36,1) 200ms;
 }
+.animate-hl .hero__title .hl{color:#111;}
+.animate-hl .hero__title .hl .sweep{transform:scaleX(1);}
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce){
   .hero__video{display:none}
   .section-title:after{animation:none}
-  .animate-hl .hero__title .hl{
-    transition:none;
-    background-size:100% 0.55em;
-    color:#111;
-  }
+  .animate-hl .hero__title .hl{transition:none;color:#111;}
+  .animate-hl .hero__title .hl .sweep{transition:none;transform:scaleX(1);}
 }
 
 /* Panels */
