@@ -1,23 +1,121 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dyslexia Reading Challenge</title>
-    <link rel="stylesheet" href="css/style.css"> <!-- Ensure style.css is in /css/ -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Literacy Action</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-    <h1>Dyslexia Reading Challenge</h1>
-    <p>Try reading each shifting sentence. Click "Next" when you've finished reading each one.</p>
-
-    <button id="startButton">Start</button>
-    <div id="textContainer" style="display:none;">
-        <p id="dyslexiaText"></p>
-        <button id="nextButton">Next</button>
+  <!-- Hero / Header -->
+  <header class="hero">
+    <video class="hero__video" autoplay muted loop playsinline poster="" aria-hidden="true">
+      <!-- Optional: drop a small looping mp4 here. If not present, the gradient fallback shows. -->
+    </video>
+    <div class="hero__scrim"></div>
+    <div class="container hero__content">
+      <h1 class="eyebrow">NATIONAL CRISIS</h1>
+      <h2 class="hero__title">Our kids can't read.</h2>
+      <p class="hero__subtitle"><strong>When kids aren't proficient at a young age it has a major impact on the rest of their lives. Almost all of our 4th graders cannot read.</strong></p>
     </div>
-    <p id="result"></p>
+    <!-- soft divider -->
+    <div class="section-separator"></div>
+  </header>
 
-    <script src="js/script.js" defer></script> <!-- Corrected script path -->
+  <main>
+
+    <!-- National 32% section (redesigned donut gauge area, same data) -->
+    <section class="panel panel--dark">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">NATIONAL SNAPSHOT</div>
+          <h3 class="section-title">Grade 4 Reading (National)</h3>
+        </div>
+
+        <div class="nx-grid">
+          <div class="nx-copy">
+            <ul class="key-bullets">
+              <li><span class="key key--cant"></span><strong>CAN'T</strong> read at grade level</li>
+              <li><span class="key key--can"></span><strong>CAN</strong> read at grade level</li>
+            </ul>
+            <div class="chips">
+              <div class="chip chip--cant"><strong>CAN'T:</strong> <span id="cantVal">68%</span></div>
+              <div class="chip"><strong>CAN:</strong> <span id="canVal">32%</span></div>
+            </div>
+          </div>
+
+          <div class="nx-viz">
+            <!-- Re-thought visual (still a donut but cleaner). JS fills this -->
+            <svg id="donut" viewBox="0 0 40 40" role="img" aria-label="National reading gauge"></svg>
+          </div>
+        </div>
+      </div>
+      <div class="section-separator"></div>
+    </section>
+
+    <!-- Map card -->
+    <section class="panel">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">BY STATE</div>
+          <h3 class="section-title">Grade 4 Reading by State</h3>
+        </div>
+
+        <div id="mapContainer" class="map-card">
+          <!-- Paste/keep your working US map SVG here -->
+          <!-- Ensure the root svg has id="usMap" and each state has data-abbr="CA" etc. -->
+          <!-- Example skeleton (replace with your full map paths): -->
+          <!--
+          <svg id="usMap" viewBox="0 0 975 610">
+            <g class="states">
+              <path data-abbr="CA" d="..." />
+              ...
+            </g>
+          </svg>
+          -->
+          <div id="tooltip" class="tooltip" hidden></div>
+        </div>
+
+        <div class="source">Source: Nation's Report Card</div>
+      </div>
+      <div class="section-separator"></div>
+    </section>
+
+    <!-- State list: % who CAN'T read (top 5 + more) -->
+    <section class="panel">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">RANKED</div>
+          <h3 class="section-title">States Ranked by % of Students Who CAN'T Read</h3>
+        </div>
+        <ul id="cantList" class="list list--cant"></ul>
+        <div class="center">
+          <button id="toggleCant" class="btn">View More</button>
+        </div>
+      </div>
+      <div class="section-separator"></div>
+    </section>
+
+    <!-- K–12 Spending (top 5 + more, scrubbed) -->
+    <section class="panel panel--ink">
+      <div class="container">
+        <div class="section-head">
+          <div class="eyebrow">FUNDING</div>
+          <h3 class="section-title">K–12 Spending Per Student (Highest First)</h3>
+        </div>
+      </div>
+
+      <ul id="spendList" class="spend-list"></ul>
+      <div class="center">
+        <button id="toggleSpend" class="btn btn--ghost">View More</button>
+      </div>
+      <!-- Spacer + Fact will be injected after spendList by JS -->
+      <div class="section-separator"></div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
 </body>
 </html>
