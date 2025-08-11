@@ -4,28 +4,32 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Literacy Action</title>
-  <link rel="stylesheet" href="styles.css" />
+
+  <!-- your repo paths -->
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
 
   <!-- Hero / Header -->
   <header class="hero">
-    <video class="hero__video" autoplay muted loop playsinline poster="" aria-hidden="true">
-      <!-- Optional: drop a small looping mp4 here. If not present, the gradient fallback shows. -->
-    </video>
+    <video class="hero__video" autoplay muted loop playsinline aria-hidden="true"></video>
     <div class="hero__scrim"></div>
+
     <div class="container hero__content">
       <h1 class="eyebrow">NATIONAL CRISIS</h1>
+      <!-- keep the phrase “can't read” so the header highlight runs -->
       <h2 class="hero__title">Our kids can't read.</h2>
-      <p class="hero__subtitle"><strong>When kids aren't proficient at a young age it has a major impact on the rest of their lives. Almost all of our 4th graders cannot read.</strong></p>
+      <p class="hero__subtitle">
+        <strong>When kids aren't proficient at a young age it has a major impact on the rest of their lives. Almost all of our 4th graders cannot read.</strong>
+      </p>
     </div>
-    <!-- soft divider -->
+
     <div class="section-separator"></div>
   </header>
 
   <main>
 
-    <!-- National 32% section (redesigned donut gauge area, same data) -->
+    <!-- National 32% section (pictogram + donut) -->
     <section class="panel panel--dark">
       <div class="container">
         <div class="section-head">
@@ -34,6 +38,8 @@
         </div>
 
         <div class="nx-grid">
+          <!-- LEFT: pictogram gets injected here; we keep the original legend markup
+               so JS can move it UNDER the pictogram and not under the donut -->
           <div class="nx-copy">
             <ul class="key-bullets">
               <li><span class="key key--cant"></span><strong>CAN'T</strong> read at grade level</li>
@@ -45,9 +51,9 @@
             </div>
           </div>
 
+          <!-- RIGHT: donut -->
           <div class="nx-viz">
-            <!-- Re-thought visual (still a donut but cleaner). JS fills this -->
-            <svg id="donut" viewBox="0 0 40 40" role="img" aria-label="National reading gauge"></svg>
+            <svg id="donut" viewBox="0 0 160 160" role="img" aria-label="National reading gauge"></svg>
           </div>
         </div>
       </div>
@@ -63,17 +69,17 @@
         </div>
 
         <div id="mapContainer" class="map-card">
-          <!-- Paste/keep your working US map SVG here -->
-          <!-- Ensure the root svg has id="usMap" and each state has data-abbr="CA" etc. -->
-          <!-- Example skeleton (replace with your full map paths): -->
-          <!--
-          <svg id="usMap" viewBox="0 0 975 610">
+          <!-- Minimal placeholder US map (so JS has #usMap). Replace with your full SVG later. -->
+          <svg id="usMap" viewBox="0 0 400 250" aria-hidden="true">
             <g class="states">
-              <path data-abbr="CA" d="..." />
-              ...
+              <!-- Just a couple demo shapes with data-abbr so the tooltip code doesn't error -->
+              <rect data-abbr="CA" x="20"  y="120" width="60" height="40" rx="4"></rect>
+              <rect data-abbr="TX" x="120" y="140" width="80" height="50" rx="4"></rect>
+              <rect data-abbr="FL" x="260" y="160" width="50" height="30" rx="4"></rect>
+              <rect data-abbr="NY" x="300" y="60"  width="40" height="28" rx="4"></rect>
             </g>
           </svg>
-          -->
+
           <div id="tooltip" class="tooltip" hidden></div>
         </div>
 
@@ -82,13 +88,16 @@
       <div class="section-separator"></div>
     </section>
 
-    <!-- State list: % who CAN'T read (top 5 + more) -->
+    <!-- BOOKS section is injected by JS right after the map panel -->
+
+    <!-- States Ranked list -->
     <section class="panel">
       <div class="container">
         <div class="section-head">
           <div class="eyebrow">RANKED</div>
           <h3 class="section-title">States Ranked by % of Students Who CAN'T Read</h3>
         </div>
+
         <ul id="cantList" class="list list--cant"></ul>
         <div class="center">
           <button id="toggleCant" class="btn">View More</button>
@@ -97,7 +106,7 @@
       <div class="section-separator"></div>
     </section>
 
-    <!-- K–12 Spending (top 5 + more, scrubbed) -->
+    <!-- K–12 Spending list -->
     <section class="panel panel--ink">
       <div class="container">
         <div class="section-head">
@@ -110,12 +119,13 @@
       <div class="center">
         <button id="toggleSpend" class="btn btn--ghost">View More</button>
       </div>
-      <!-- Spacer + Fact will be injected after spendList by JS -->
+
       <div class="section-separator"></div>
     </section>
 
   </main>
 
-  <script src="app.js"></script>
+  <!-- your repo path -->
+  <script src="js/app.js" defer></script>
 </body>
 </html>
