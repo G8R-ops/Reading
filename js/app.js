@@ -471,13 +471,13 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
 
   // Placeholder catalog (title + author; covers are blocks or swap to <img>)
   const books = [
-    ["Charlotte’s Web","E. B. White"],["Matilda","Roald Dahl"],["The Lion, the Witch and the Wardrobe","C. S. Lewis"],
-    ["Harry Potter and the Sorcerer’s Stone","J. K. Rowling"],["The Hobbit","J. R. R. Tolkien"],
-    ["The Giver","Lois Lowry"],["Holes","Louis Sachar"],["Wonder","R. J. Palacio"],
-    ["The Cat in the Hat","Dr. Seuss"],["Where the Wild Things Are","Maurice Sendak"],
-    ["Diary of a Wimpy Kid","Jeff Kinney"],["The Very Hungry Caterpillar","Eric Carle"],
-    ["Goodnight Moon","Margaret Wise Brown"],["A Wrinkle in Time","Madeleine L’Engle"],
-    ["Percy Jackson: The Lightning Thief","Rick Riordan"],["Because of Winn-Dixie","Kate DiCamillo"]
+    ["Charlotte’s Web","E. B. White"],["The Boxcar Children","Gertrude Chandler Warner"],
+    ["Sarah, Plain and Tall","Patricia MacLachlan"],["Little House in the Big Woods","Laura Ingalls Wilder"],
+    ["Pippi Longstocking","Astrid Lindgren"],["Mr. Popper’s Penguins","Richard Atwater"],
+    ["Stuart Little","E. B. White"],["The Secret Garden","Frances Hodgson Burnett"],
+    ["Because of Winn-Dixie","Kate DiCamillo"],["The Tale of Despereaux","Kate DiCamillo"],
+    ["Charlie and the Chocolate Factory","Roald Dahl"],["Matilda","Roald Dahl"],
+    ["The Wind in the Willows","Kenneth Grahame"]
   ];
 
   const track = section.querySelector("#booksTrack");
