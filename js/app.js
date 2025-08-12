@@ -469,36 +469,31 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
   `;
   mapPanel.parentNode.insertBefore(section, mapPanel.nextSibling);
 
-  // Placeholder catalog (title + author; covers are blocks or swap to <img>)
-  const books = [
-    ["Charlotte’s Web","E. B. White"],["Matilda","Roald Dahl"],["The Lion, the Witch and the Wardrobe","C. S. Lewis"],
-    ["Harry Potter and the Sorcerer’s Stone","J. K. Rowling"],["The Hobbit","J. R. R. Tolkien"],
-    ["The Giver","Lois Lowry"],["Holes","Louis Sachar"],["Wonder","R. J. Palacio"],
-    ["The Cat in the Hat","Dr. Seuss"],["Where the Wild Things Are","Maurice Sendak"],
-    ["Diary of a Wimpy Kid","Jeff Kinney"],["The Very Hungry Caterpillar","Eric Carle"],
-    ["Goodnight Moon","Margaret Wise Brown"],["A Wrinkle in Time","Madeleine L’Engle"],
-    ["Percy Jackson: The Lightning Thief","Rick Riordan"],["Because of Winn-Dixie","Kate DiCamillo"]
+  // Titles to fetch from Open Library
+  const TITLES = [
+    "Charlotte's Web","The Boxcar Children","Sarah, Plain and Tall","Little House in the Big Woods",
+    "Pippi Longstocking","Mr. Popper's Penguins","Stuart Little","The Secret Garden",
+    "Because of Winn-Dixie","The Tale of Despereaux","Charlie and the Chocolate Factory","Matilda",
+    "The Wind in the Willows"
   ];
 
   const track = section.querySelector("#booksTrack");
 
-  function card([title, author]){
+  function card(book){
     const el = document.createElement("div");
     el.className = "book-card";
-    // To use real covers later, replace <div class="book-cover"> with <img class="book-cover" src="..." alt="">
+    const cover = book.cover
+      ? `<img class="book-cover" src="${book.cover}" alt="Cover of ${book.title}">`
+      : `<div class="book-cover">${book.title.split(" ").slice(0,2).map(w=>w[0]).join("").toUpperCase()}</div>`;
     el.innerHTML = `
-      <div class="book-cover">${title.split(" ").slice(0,2).map(w=>w[0]).join("").toUpperCase()}</div>
+      ${cover}
       <div class="book-meta">
-        <div class="t">${title}</div>
-        <div class="by">by ${author}</div>
+        <div class="t">${book.title}</div>
+        <div class="by">by ${book.author}</div>
       </div>
     `;
     return el;
   }
-
-  // Build two copies for seamless marquee
-  const all = [...books, ...books];
-  all.forEach(b => track.appendChild(card(b)));
 
   // Compute duration based on content width (≈80px/sec)
   function setDuration(){
@@ -507,6 +502,31 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
     const dur = Math.max(20, Math.round((distance/2) / speed)); // seconds for half-track
     track.style.setProperty("--marquee-duration", `${dur}s`);
   }
-  setDuration();
+
+  async function fetchBook(title){
+    try {
+      const res = await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&limit=1`);
+      const data = await res.json();
+      const doc = data.docs && data.docs[0];
+      return {
+        title: doc?.title || title,
+        author: doc?.author_name ? doc.author_name[0] : "Unknown",
+        cover: doc?.cover_i ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg` : null
+      };
+    } catch(err){
+      console.error("Failed to fetch book", title, err);
+      return { title, author: "Unknown", cover: null };
+    }
+  }
+
+  async function init(){
+    const books = [];
+    for (const t of TITLES) books.push(await fetchBook(t));
+    const all = [...books, ...books];
+    all.forEach(b => track.appendChild(card(b)));
+    setDuration();
+  }
+
+  init();
   window.addEventListener("resize", setDuration, { passive:true });
 })();
