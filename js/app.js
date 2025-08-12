@@ -469,12 +469,21 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
   `;
   mapPanel.parentNode.insertBefore(section, mapPanel.nextSibling);
 
-  // Titles to fetch from Open Library
-  const TITLES = [
-    "Charlotte's Web","The Boxcar Children","Sarah, Plain and Tall","Little House in the Big Woods",
-    "Pippi Longstocking","Mr. Popper's Penguins","Stuart Little","The Secret Garden",
-    "Because of Winn-Dixie","The Tale of Despereaux","Charlie and the Chocolate Factory","Matilda",
-    "The Wind in the Willows"
+  // Catalog to fetch from Open Library (title + author)
+  const BOOKS = [
+    { title: "Charlotte's Web", author: "E. B. White" },
+    { title: "The Boxcar Children", author: "Gertrude Chandler Warner" },
+    { title: "Sarah, Plain and Tall", author: "Patricia MacLachlan" },
+    { title: "Little House in the Big Woods", author: "Laura Ingalls Wilder" },
+    { title: "Pippi Longstocking", author: "Astrid Lindgren" },
+    { title: "Mr. Popper's Penguins", author: "Richard Atwater" },
+    { title: "Stuart Little", author: "E. B. White" },
+    { title: "The Secret Garden", author: "Frances Hodgson Burnett" },
+    { title: "Because of Winn-Dixie", author: "Kate DiCamillo" },
+    { title: "The Tale of Despereaux", author: "Kate DiCamillo" },
+    { title: "Charlie and the Chocolate Factory", author: "Roald Dahl" },
+    { title: "Matilda", author: "Roald Dahl" },
+    { title: "The Wind in the Willows", author: "Kenneth Grahame" },
   ];
 
   const track = section.querySelector("#booksTrack");
@@ -503,30 +512,31 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
     track.style.setProperty("--marquee-duration", `${dur}s`);
   }
 
-  async function fetchBook(title){
+  async function fetchBook(book){
     try {
-      const res = await fetch(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&limit=1`);
+      const res = await fetch(
+        `https://openlibrary.org/search.json?title=${encodeURIComponent(book.title)}&author=${encodeURIComponent(book.author)}&limit=1`
+      );
       const data = await res.json();
       const doc = data.docs && data.docs[0];
       return {
-        title: doc?.title || title,
-        author: doc?.author_name ? doc.author_name[0] : "Unknown",
-        cover: doc?.cover_i ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg` : null
+        title: book.title,
+        author: book.author,
+        cover: doc?.cover_i ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg` : null,
       };
-    } catch(err){
-      console.error("Failed to fetch book", title, err);
-      return { title, author: "Unknown", cover: null };
+    } catch (err) {
+      console.error("Failed to fetch book", book.title, err);
+      return { ...book, cover: null };
     }
   }
 
-  async function init(){
-    const books = [];
-    for (const t of TITLES) books.push(await fetchBook(t));
+  async function init() {
+    const books = await Promise.all(BOOKS.map(fetchBook));
     const all = [...books, ...books];
-    all.forEach(b => track.appendChild(card(b)));
+    all.forEach((b) => track.appendChild(card(b)));
     setDuration();
   }
 
   init();
-  window.addEventListener("resize", setDuration, { passive:true });
+  window.addEventListener("resize", setDuration, { passive: true });
 })();
