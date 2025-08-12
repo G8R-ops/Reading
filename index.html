@@ -12,7 +12,15 @@
 
   <!-- Hero / Header -->
   <header class="hero">
-    <video class="hero__video" autoplay muted loop playsinline aria-hidden="true"></video>
+    <div class="hero__visual" aria-hidden="true">
+      <div class="hero__reveal">
+        <svg class="hero__graph" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <polyline class="hero__graph-line" points="0,10 20,25 40,45 60,65 80,82 100,90" />
+        </svg>
+      </div>
+      <div class="hero__book-half hero__book-half--left"></div>
+      <div class="hero__book-half hero__book-half--right"></div>
+    </div>
     <div class="hero__scrim"></div>
 
     <div class="container hero__content">
