@@ -469,7 +469,7 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
   `;
   mapPanel.parentNode.insertBefore(section, mapPanel.nextSibling);
 
-  // Placeholder catalog (title + author; covers are blocks or swap to <img>)
+  // Placeholder catalog (title + author); cover art fetched via Open Library
   const books = [
     ["Charlotte’s Web","E. B. White"],["The Boxcar Children","Gertrude Chandler Warner"],
     ["Sarah, Plain and Tall","Patricia MacLachlan"],["Little House in the Big Woods","Laura Ingalls Wilder"],
@@ -482,17 +482,42 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
 
   const track = section.querySelector("#booksTrack");
 
+  const coverCache = new Map();
+  async function fetchCoverURL(title, author){
+    const key = `${title}|${author}`;
+    if (coverCache.has(key)) return coverCache.get(key);
+    const url = `https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&author=${encodeURIComponent(author)}&limit=1`;
+    try{
+      const res = await fetch(url);
+      if (res.ok){
+        const data = await res.json();
+        const id = data?.docs?.[0]?.cover_i;
+        if (id) coverCache.set(key, `https://covers.openlibrary.org/b/id/${id}-M.jpg`);
+        else coverCache.set(key, null);
+      } else {
+        coverCache.set(key, null);
+      }
+    }catch(e){
+      coverCache.set(key, null);
+    }
+    return coverCache.get(key);
+  }
+
   function card([title, author]){
     const el = document.createElement("div");
     el.className = "book-card";
-    // To use real covers later, replace <div class="book-cover"> with <img class="book-cover" src="..." alt="">
-    el.innerHTML = `
-      <div class="book-cover">${title.split(" ").slice(0,2).map(w=>w[0]).join("").toUpperCase()}</div>
-      <div class="book-meta">
-        <div class="t">${title}</div>
-        <div class="by">by ${author}</div>
-      </div>
-    `;
+    const cover = document.createElement("div");
+    cover.className = "book-cover";
+    cover.textContent = title.split(" ").slice(0,2).map(w=>w[0]).join("").toUpperCase();
+    const meta = document.createElement("div");
+    meta.className = "book-meta";
+    meta.innerHTML = `<div class="t">${title}</div><div class="by">by ${author}</div>`;
+    el.appendChild(cover); el.appendChild(meta);
+    fetchCoverURL(title, author).then(src=>{
+      if (src){
+        cover.innerHTML = `<img src="${src}" alt="Cover of ${title} by ${author}">`;
+      }
+    });
     return el;
   }
 
