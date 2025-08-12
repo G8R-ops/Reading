@@ -58,7 +58,7 @@ const spendColor = thresholdScale(SPEND_THRESHOLDS, COLORS);
   const txt = h2.textContent;
   const target = /can't read/i;
   if (!target.test(txt)) return;
-  h2.innerHTML = txt.replace(target, (m)=>`<span class="hl">${m}<span class="sweep" aria-hidden="true"></span></span>`);
+  h2.innerHTML = txt.replace(target, (m)=>`<span class="hl">${m}</span>`);
   // trigger sweep after a tick
   requestAnimationFrame(()=> document.documentElement.classList.add("animate-hl"));
 })();

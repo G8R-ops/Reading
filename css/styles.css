@@ -35,36 +35,20 @@ img,svg,video{max-width:100%;height:auto}
 
 /* Header highlight over “can’t read” */
 .hero__title .hl{
-  position:relative;
-  display:inline-block;
-  padding:0 .15em;
-  border-radius:.25em;
-  transition:color .2s 200ms;
+  background: linear-gradient(var(--accent), var(--accent)) 0 100%/0 .55em no-repeat;
+  transition: color .2s 200ms, background-size 1200ms cubic-bezier(.22,1,.36,1) 200ms;
 }
-.hero__title .hl .sweep{
-  position:absolute;
-  left:0;
-  right:0;
-  bottom:0;
-  height:.55em;
-  background:var(--accent);
-  transform-origin:left;
-  transform:scaleX(0);
-  border-radius:.25em;
-  z-index:-1;
+.animate-hl .hero__title .hl{
+  color:#111;
+  background-size:100% .55em;
 }
-.animate-hl .hero__title .hl{ color:#111; }
-.animate-hl .hero__title .hl .sweep{
-  animation:hlSweep 1200ms cubic-bezier(.22,1,.36,1) 200ms both;
-}
-@keyframes hlSweep{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce){
   .hero__video{display:none}
   .section-title:after{animation:none}
-  .animate-hl .hero__title .hl .sweep{animation:none;transform:scaleX(1)}
-  .animate-hl .hero__title .hl{color:#111}
+  .hero__title .hl{transition:none}
+  .animate-hl .hero__title .hl{color:#111;background-size:100% .55em}
 }
 
 /* Panels */
