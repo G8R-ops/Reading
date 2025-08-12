@@ -469,36 +469,40 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
   `;
   mapPanel.parentNode.insertBefore(section, mapPanel.nextSibling);
 
-  // Placeholder catalog (title + author; covers are blocks or swap to <img>)
-  const books = [
-    ["Charlotte’s Web","E. B. White"],["Matilda","Roald Dahl"],["The Lion, the Witch and the Wardrobe","C. S. Lewis"],
-    ["Harry Potter and the Sorcerer’s Stone","J. K. Rowling"],["The Hobbit","J. R. R. Tolkien"],
-    ["The Giver","Lois Lowry"],["Holes","Louis Sachar"],["Wonder","R. J. Palacio"],
-    ["The Cat in the Hat","Dr. Seuss"],["Where the Wild Things Are","Maurice Sendak"],
-    ["Diary of a Wimpy Kid","Jeff Kinney"],["The Very Hungry Caterpillar","Eric Carle"],
-    ["Goodnight Moon","Margaret Wise Brown"],["A Wrinkle in Time","Madeleine L’Engle"],
-    ["Percy Jackson: The Lightning Thief","Rick Riordan"],["Because of Winn-Dixie","Kate DiCamillo"]
+  // Catalog to fetch from Open Library (title + author)
+  const BOOKS = [
+    { title: "Charlotte's Web", author: "E. B. White" },
+    { title: "The Boxcar Children", author: "Gertrude Chandler Warner" },
+    { title: "Sarah, Plain and Tall", author: "Patricia MacLachlan" },
+    { title: "Little House in the Big Woods", author: "Laura Ingalls Wilder" },
+    { title: "Pippi Longstocking", author: "Astrid Lindgren" },
+    { title: "Mr. Popper's Penguins", author: "Richard Atwater" },
+    { title: "Stuart Little", author: "E. B. White" },
+    { title: "The Secret Garden", author: "Frances Hodgson Burnett" },
+    { title: "Because of Winn-Dixie", author: "Kate DiCamillo" },
+    { title: "The Tale of Despereaux", author: "Kate DiCamillo" },
+    { title: "Charlie and the Chocolate Factory", author: "Roald Dahl" },
+    { title: "Matilda", author: "Roald Dahl" },
+    { title: "The Wind in the Willows", author: "Kenneth Grahame" },
   ];
 
   const track = section.querySelector("#booksTrack");
 
-  function card([title, author]){
+  function card(book){
     const el = document.createElement("div");
     el.className = "book-card";
-    // To use real covers later, replace <div class="book-cover"> with <img class="book-cover" src="..." alt="">
+    const cover = book.cover
+      ? `<img class="book-cover" src="${book.cover}" alt="Cover of ${book.title}">`
+      : `<div class="book-cover">${book.title.split(" ").slice(0,2).map(w=>w[0]).join("").toUpperCase()}</div>`;
     el.innerHTML = `
-      <div class="book-cover">${title.split(" ").slice(0,2).map(w=>w[0]).join("").toUpperCase()}</div>
+      ${cover}
       <div class="book-meta">
-        <div class="t">${title}</div>
-        <div class="by">by ${author}</div>
+        <div class="t">${book.title}</div>
+        <div class="by">by ${book.author}</div>
       </div>
     `;
     return el;
   }
-
-  // Build two copies for seamless marquee
-  const all = [...books, ...books];
-  all.forEach(b => track.appendChild(card(b)));
 
   // Compute duration based on content width (≈80px/sec)
   function setDuration(){
@@ -507,6 +511,32 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
     const dur = Math.max(20, Math.round((distance/2) / speed)); // seconds for half-track
     track.style.setProperty("--marquee-duration", `${dur}s`);
   }
-  setDuration();
-  window.addEventListener("resize", setDuration, { passive:true });
+
+  async function fetchBook(book){
+    try {
+      const res = await fetch(
+        `https://openlibrary.org/search.json?title=${encodeURIComponent(book.title)}&author=${encodeURIComponent(book.author)}&limit=1`
+      );
+      const data = await res.json();
+      const doc = data.docs && data.docs[0];
+      return {
+        title: book.title,
+        author: book.author,
+        cover: doc?.cover_i ? `https://covers.openlibrary.org/b/id/${doc.cover_i}-M.jpg` : null,
+      };
+    } catch (err) {
+      console.error("Failed to fetch book", book.title, err);
+      return { ...book, cover: null };
+    }
+  }
+
+  async function init() {
+    const books = await Promise.all(BOOKS.map(fetchBook));
+    const all = [...books, ...books];
+    all.forEach((b) => track.appendChild(card(b)));
+    setDuration();
+  }
+
+  init();
+  window.addEventListener("resize", setDuration, { passive: true });
 })();
