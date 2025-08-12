@@ -367,7 +367,7 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
     ul.innerHTML = "";
 
     // Spacer + fact
-    const TRIGGER = 0.7, TRAVEL = 1;
+    const TRIGGER = 0.7, TRAVEL = 0.6;
     let spacer = document.getElementById("spendSpacer");
     if (!spacer) {
       spacer = document.createElement("div");
