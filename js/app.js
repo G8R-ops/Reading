@@ -94,13 +94,14 @@ const spendColor = thresholdScale(SPEND_THRESHOLDS, COLORS);
 
   const canArc = make("circle",{cx,cy,r,fill:"none","stroke-width":th,"stroke-linecap":"butt",transform:`rotate(-90 ${cx} ${cy})`});
   canArc.style.stroke = NEUTRAL; canArc.style.opacity = "0.35";
-  canArc.setAttribute("stroke-dasharray", `${C} 0`);
+  canArc.setAttribute("stroke-dasharray", `${C}`);
+  canArc.setAttribute("stroke-dashoffset", "0");
   svg.appendChild(canArc);
 
   const cantArc = make("circle",{cx,cy,r,fill:"none","stroke-width":th,"stroke-linecap":"butt",transform:`rotate(-90 ${cx} ${cy})`});
   cantArc.style.stroke = ACCENT;
-  cantArc.setAttribute("stroke-dasharray", `${cantLen} ${C-cantLen}`);
-  cantArc.setAttribute("stroke-dashoffset", String(cantLen));
+  cantArc.setAttribute("stroke-dasharray", `${C}`);
+  cantArc.setAttribute("stroke-dashoffset", `${C}`);
   svg.appendChild(cantArc);
 
   const big = make("text",{x:cx,y:cy+6,"text-anchor":"middle","font-size":"38","font-weight":"800",fill:"#fff"}); big.textContent="0%";
@@ -109,14 +110,14 @@ const spendColor = thresholdScale(SPEND_THRESHOLDS, COLORS);
 
   function animate(){
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce){ cantArc.setAttribute("stroke-dashoffset","0"); big.textContent = cant + "%"; return; }
+    if (reduce){ cantArc.setAttribute("stroke-dashoffset", String(C - cantLen)); big.textContent = cant + "%"; return; }
     const dur = 2000; // slower
     const start = performance.now();
     const ease = t => 1 - Math.pow(1 - t, 3);
     function tick(now){
       const t = Math.min(1, (now - start)/dur);
       const p = ease(t);
-      cantArc.setAttribute("stroke-dashoffset", String(cantLen * (1 - p)));
+      cantArc.setAttribute("stroke-dashoffset", String(C - cantLen * p));
       big.textContent = Math.round(cant * p) + "%";
       if (t < 1) requestAnimationFrame(tick);
     }
@@ -190,12 +191,7 @@ const spendColor = thresholdScale(SPEND_THRESHOLDS, COLORS);
   ul.className="key-bullets";
   ul.innerHTML = '<li><span class="key key--cant"></span><strong>CAN\'T</strong> read at grade level</li>'+
                  '<li><span class="key key--can"></span><strong>CAN</strong> read at grade level</li>';
-  const chipsDiv = document.createElement("div");
-  chipsDiv.className="chips";
-  chipsDiv.innerHTML = `<div class="chip chip--cant"><strong>CAN'T:</strong> <span>${cant}%</span></div>
-                        <div class="chip"><strong>CAN:</strong> <span>${can}%</span></div>`;
   legendHost.appendChild(ul);
-  legendHost.appendChild(chipsDiv);
   left.appendChild(legendHost);
 
   // Animate on scroll (slower stagger)
@@ -256,7 +252,7 @@ const spendColor = thresholdScale(SPEND_THRESHOLDS, COLORS);
   function showTip(e, abbr, val){
     const name = STATE_NAMES[abbr] || abbr;
     tooltip.innerHTML = `<div class="tip-title"><strong>${name} (${abbr})</strong></div>` +
-      `<div>${val==null?'N/A':val.toFixed(1)+'%'} can read at grade level</div>`;
+      `<div>${val==null?'N/A':'Only '+val.toFixed(1)+'%'} can read at grade level</div>`;
     tooltip.hidden = false;
     moveTip(e);
   }
@@ -371,7 +367,7 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
     ul.innerHTML = "";
 
     // Spacer + fact
-    const TRIGGER = 0.7, TRAVEL = 0.5;
+    const TRIGGER = 0.7, TRAVEL = 0.6;
     let spacer = document.getElementById("spendSpacer");
     if (!spacer) {
       spacer = document.createElement("div");
@@ -507,7 +503,7 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
   // Compute duration based on content width (≈80px/sec)
   function setDuration(){
     const distance = track.scrollWidth;
-    const speed = 80; // px/sec
+    const speed = 120; // px/sec
     const dur = Math.max(20, Math.round((distance/2) / speed)); // seconds for half-track
     track.style.setProperty("--marquee-duration", `${dur}s`);
   }
