@@ -45,15 +45,14 @@ img,svg,video{max-width:100%;height:auto}
   position:absolute;
   left:0;
   right:0;
-  bottom:0;
-  height:.55em;
+  bottom:-4px;
+  height:3px;
   background:var(--accent);
   transform-origin:left;
   transform:scaleX(0);
-  border-radius:.25em;
-  z-index:-1;
+  border-radius:2px;
 }
-.animate-hl .hero__title .hl{ color:#111; }
+.animate-hl .hero__title .hl{ color:inherit; }
 .animate-hl .hero__title .hl .sweep{
   animation:hlSweep 1200ms cubic-bezier(.22,1,.36,1) 200ms both;
 }
@@ -64,7 +63,7 @@ img,svg,video{max-width:100%;height:auto}
   .hero__video{display:none}
   .section-title:after{animation:none}
   .animate-hl .hero__title .hl .sweep{animation:none;transform:scaleX(1)}
-  .animate-hl .hero__title .hl{color:#111}
+  .animate-hl .hero__title .hl{color:inherit}
 }
 
 /* Panels */
