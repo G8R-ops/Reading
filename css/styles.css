@@ -30,9 +30,9 @@ img,svg,video{max-width:100%;height:auto}
 .hero__graph{width:100%;height:100%}
 .hero__graph-line{fill:none;stroke:#fff;stroke-width:2;stroke-dasharray:300;stroke-dashoffset:300;animation:drawGraph 6s linear forwards}
 @keyframes drawGraph{to{stroke-dashoffset:0}}
-.hero__book{position:absolute;inset:0;width:100%;background-image:url('https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=2000&q=80');background-size:cover;background-position:center;background-repeat:no-repeat;z-index:2;animation:bookRip 5s ease forwards;transform-origin:left}
-.hero__book::after{content:"";position:absolute;top:0;bottom:0;right:-12px;width:24px;background:url('https://i.imgur.com/2M4ppbl.png') center/cover no-repeat}
-@keyframes bookRip{from{width:100%}to{width:50%}}
+.hero__book{position:absolute;top:0;bottom:0;right:0;left:auto;width:100%;background-image:url('../image/child-book.svg');background-size:cover;background-position:center;background-repeat:no-repeat;z-index:2;animation:bookRip 5s ease forwards}
+.hero__book::after{content:"";position:absolute;top:0;bottom:0;left:-12px;width:24px;background:url('https://i.imgur.com/2M4ppbl.png') center/cover no-repeat}
+@keyframes bookRip{from{width:100%}to{width:0}}
 .hero__scrim{position:absolute;inset:0;background:radial-gradient(1200px 500px at 50% 110%, rgba(0,0,0,.65), transparent 70%);z-index:3}
 .hero__content{position:relative;padding:72px 16px 48px;z-index:4}
 .eyebrow{letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-size:13px;margin:0 0 8px}
