@@ -481,6 +481,7 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
   ];
 
   const track = section.querySelector("#booksTrack");
+  const rail = section.querySelector(".books-rail");
 
   const coverCache = new Map();
   async function fetchCoverURL(title, author){
@@ -525,13 +526,28 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
   const all = [...books, ...books];
   all.forEach(b => track.appendChild(card(b)));
 
-  // Compute duration based on content width (≈80px/sec)
-  function setDuration(){
-    const distance = track.scrollWidth;
-    const speed = 120; // px/sec
-    const dur = Math.max(20, Math.round((distance/2) / speed)); // seconds for half-track
-    track.style.setProperty("--marquee-duration", `${dur}s`);
+  // Continuous scroll
+  let half = 0;
+  function setWidth(){ half = track.scrollWidth / 2; }
+  setWidth();
+  window.addEventListener("resize", setWidth, { passive:true });
+
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let paused = false;
+  rail.addEventListener("mouseenter", ()=> paused = true);
+  rail.addEventListener("mouseleave", ()=> paused = false);
+
+  if (!reduce){
+    let x = 0;
+    const speed = 0.8; // px per frame
+    function animate(){
+      if (!paused){
+        x -= speed;
+        if (-x >= half) x += half;
+        track.style.transform = `translateX(${x}px)`;
+      }
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
   }
-  setDuration();
-  window.addEventListener("resize", setDuration, { passive:true });
 })();
