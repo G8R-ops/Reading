@@ -29,16 +29,25 @@ img,svg,video{max-width:100%;height:auto}
 .container{max-width:1100px;margin:0 auto;padding:0 16px}
 @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-/* Hero */
+/* Hero with subtle animated background */
 .hero{
   position: relative;
-  min-height: 60vh;
+  min-height: 48vh; /* reduced from 60vh */
   display: flex;
   align-items: flex-end;
   overflow: hidden;
 
-  /* Softer, static gradient */
+  /* Softer gradient + subtle motion */
   background: linear-gradient(180deg, #9b1115 0%, #7b0d12 60%, #640a0f 100%);
+  background-size: 200% 200%;
+  animation: heroBgShift 40s ease-in-out infinite;
+}
+
+/* slow, gentle panning */
+@keyframes heroBgShift {
+  0%   { background-position: 0% 0%; }
+  50%  { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
 }
 
 /* Subtle vignette to boost text contrast */
@@ -55,8 +64,9 @@ img,svg,video{max-width:100%;height:auto}
   pointer-events: none;
 }
 
-.hero__content{position:relative;padding:96px 16px 56px;z-index:4}
+.hero__content{position:relative;padding:72px 16px 40px;z-index:4} /* tighter */
 
+/* slightly smaller eyebrow stays readable */
 .eyebrow{
   letter-spacing:.14em;
   text-transform:uppercase;
@@ -124,8 +134,13 @@ img,svg,video{max-width:100%;height:auto}
   .animate-hl .hero__title .hl .sweep{animation:none;transform:scaleX(1)}
   .animate-hl .hero__title .hl{color:inherit}
 
-  /* Keep hero static for motion-sensitive users */
-  .hero{background:linear-gradient(180deg,#9b1115 0%, #7b0d12 60%, #640a0f 100%)}
+  /* Stop background motion for motion-sensitive users */
+  .hero{animation:none;background:linear-gradient(180deg,#9b1115 0%, #7b0d12 60%, #640a0f 100%)}
+}
+
+/* Slightly smaller hero on smaller screens */
+@media (max-width:900px){
+  .hero{ min-height: 40vh; }
 }
 
 /* Panels */
