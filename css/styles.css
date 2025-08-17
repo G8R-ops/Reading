@@ -30,24 +30,15 @@ img,svg,video{max-width:100%;height:auto}
 @keyframes bgShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
 /* Hero with subtle animated background */
+
+/* Hero with animated SVG background */
 .hero{
   position: relative;
   min-height: 48vh; /* reduced from 60vh */
   display: flex;
   align-items: flex-end;
   overflow: hidden;
-
-  /* Softer gradient + subtle motion */
-  background: linear-gradient(180deg, #9b1115 0%, #7b0d12 60%, #640a0f 100%);
-  background-size: 200% 200%;
-  animation: heroBgShift 40s ease-in-out infinite;
-}
-
-/* slow, gentle panning */
-@keyframes heroBgShift {
-  0%   { background-position: 0% 0%; }
-  50%  { background-position: 100% 100%; }
-  100% { background-position: 0% 0%; }
+  background: var(--bg);
 }
 
 /* Subtle vignette to boost text contrast */
@@ -276,3 +267,15 @@ img,svg,video{max-width:100%;height:auto}
 
 /* SR-only */
 .sr-only{position:absolute !important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+/* Hero SVG background */
+.hero .hero-bg{
+  height:140%;
+  display:block;
+  position:absolute;
+  left:0;
+  top:-100px;
+  filter:hue-rotate(172deg);
+  z-index:1;
+  pointer-events:none;
+}
