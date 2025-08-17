@@ -314,7 +314,7 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
     const visible = showAll ? items : items.slice(0,5);
     list.innerHTML = "";
 
-    const scrub = makeTopLineScrubber(0.8, 0.5);
+    const scrub = makeTopLineScrubber(0.8, 0.35);
 
     visible.forEach(d=>{
       const li = document.createElement("li");
@@ -367,7 +367,7 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
     ul.innerHTML = "";
 
     // Spacer + fact
-    const TRIGGER = 0.8, TRAVEL = 0.6;
+    const TRIGGER = 0.8, TRAVEL = 0.4;
     let spacer = document.getElementById("spendSpacer");
     if (!spacer) {
       spacer = document.createElement("div");
