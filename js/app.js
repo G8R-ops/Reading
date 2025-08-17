@@ -111,7 +111,7 @@ const spendColor = thresholdScale(SPEND_THRESHOLDS, COLORS);
   function animate(){
     const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce){ cantArc.setAttribute("stroke-dashoffset", String(C - cantLen)); big.textContent = cant + "%"; return; }
-    const dur = 2000; // slower
+    const dur = 4000; // slower
     const start = performance.now();
     const ease = t => 1 - Math.pow(1 - t, 3);
     function tick(now){
@@ -199,7 +199,7 @@ const spendColor = thresholdScale(SPEND_THRESHOLDS, COLORS);
   const cells = pic.querySelectorAll(".human");
   function runAnim(){
     cells.forEach((cell, j)=>{
-      const delay = j * 24; // slower stagger
+      const delay = j * 40; // slower stagger
       if (reduce){
         cell.style.animation = "none";
         cell.style.color = cell.classList.contains("is-cant") ? ACCENT : NEUTRAL;
@@ -314,7 +314,7 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
     const visible = showAll ? items : items.slice(0,5);
     list.innerHTML = "";
 
-    const scrub = makeTopLineScrubber(0.7, 0.5);
+    const scrub = makeTopLineScrubber(0.8, 0.5);
 
     visible.forEach(d=>{
       const li = document.createElement("li");
@@ -367,7 +367,7 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
     ul.innerHTML = "";
 
     // Spacer + fact
-    const TRIGGER = 0.7, TRAVEL = 0.6;
+    const TRIGGER = 0.8, TRAVEL = 0.6;
     let spacer = document.getElementById("spendSpacer");
     if (!spacer) {
       spacer = document.createElement("div");

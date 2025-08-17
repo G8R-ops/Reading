@@ -183,8 +183,8 @@ img,svg,video{max-width:100%;height:auto}
 .pictogram-human .human.is-cant{color:var(--accent)}
 
 /* slower animations */
-.pictogram-human .human.pop{animation:picPop 650ms cubic-bezier(.22,1,.36,1) both}
-.pictogram-human .human.fade{animation:picFade 600ms ease-out both}
+.pictogram-human .human.pop{animation:picPop 1000ms cubic-bezier(.22,1,.36,1) both}
+.pictogram-human .human.fade{animation:picFade 900ms ease-out both}
 @keyframes picPop{from{opacity:.15;transform:translateY(8px) scale(.68)}to{opacity:1;transform:none}}
 @keyframes picFade{from{opacity:0}to{opacity:.95}}
 
