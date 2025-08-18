@@ -576,8 +576,17 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
   const cards = wrap.querySelectorAll('.stories-card');
   const videos = wrap.querySelectorAll('.stories-card video');
   videos.forEach(v => {
+    const media = v.closest('.stories-media');
+    const btn = media && media.querySelector('.stories-play');
+    if (btn) {
+      btn.addEventListener('click', () => { v.play(); });
+    }
     v.addEventListener('play', () => {
       videos.forEach(o => { if (o !== v) o.pause(); });
+      media && media.classList.add('playing');
+    });
+    v.addEventListener('pause', () => {
+      media && media.classList.remove('playing');
     });
   });
   let lastBG = '';
