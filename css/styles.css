@@ -188,8 +188,15 @@ img,svg,video{max-width:100%;height:auto}
 @keyframes picPop{from{opacity:.15;transform:translateY(8px) scale(.68)}to{opacity:1;transform:none}}
 @keyframes picFade{from{opacity:0}to{opacity:.95}}
 
-@media (max-width:900px){.pictogram-human{max-width:520px}}
-@media (max-width:600px){.pictogram-human{max-width:none;--fig:calc((100% - (9 * var(--gap))) / 10);}}
+@media (max-width:900px){
+  .pictogram-human{
+    max-width:520px;
+    --fig:calc((100% - (9 * var(--gap))) / 10);
+  }
+}
+@media (max-width:600px){
+  .pictogram-human{max-width:none}
+}
 
 /* Donut viz */
 .nx-viz{display:flex;justify-content:center;align-items:center;min-height:260px}
