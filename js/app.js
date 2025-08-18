@@ -547,7 +547,67 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
         track.style.transform = `translateX(${x}px)`;
       }
       requestAnimationFrame(animate);
-    }
-    requestAnimationFrame(animate);
+  }
+  requestAnimationFrame(animate);
+  }
+})();
+
+/*** Literacy Stories (Split Scroll) ***/
+(function(){
+  const wrap = document.getElementById('literacy-stories');
+  if(!wrap) return;
+
+  const portrait = document.getElementById('stories-portrait');
+
+  // Parallax on the portrait
+  document.addEventListener('scroll', () => {
+    const y = window.scrollY || document.documentElement.scrollTop;
+    portrait && portrait.style.setProperty('--stories-parallax', y);
+  }, { passive: true });
+
+  // Dots navigation
+  const dots = wrap.querySelectorAll('.stories-dot');
+  dots.forEach(d => d.addEventListener('click', () => {
+    const target = document.querySelector(d.dataset.target);
+    target && target.scrollIntoView({ behavior:'smooth', block:'start' });
+  }));
+
+  // Observe cards for in-view + autoplay/pause + portrait swap
+  const cards = wrap.querySelectorAll('.stories-card');
+  let lastBG = '';
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      const v = e.target.querySelector('video');
+      if (e.isIntersecting) {
+        e.target.classList.add('in-view');
+
+        // Update selected dot
+        const id = '#' + e.target.id;
+        dots.forEach(dot => {
+          (dot.dataset.target === id) ? dot.setAttribute('aria-current','true')
+                                      : dot.removeAttribute('aria-current');
+        });
+
+        // Crossfade portrait when you have images later
+        const url = e.target.getAttribute('data-bg') || '';
+        if (portrait && url && url !== lastBG) {
+          portrait.style.backgroundImage = `url('${url}')`;
+          lastBG = url;
+        }
+
+        if (v) { try { v.play(); } catch(_){} }
+      } else {
+        e.target.classList.remove('in-view');
+        if (v) { try { v.pause(); } catch(_){} }
+      }
+    });
+  }, { threshold: 0.6 });
+  cards.forEach(c => io.observe(c));
+
+  // Init portrait from first card (optional)
+  const firstBG = cards[0]?.getAttribute('data-bg');
+  if (portrait && firstBG) {
+    portrait.style.backgroundImage = `url('${firstBG}')`;
+    lastBG = firstBG;
   }
 })();
