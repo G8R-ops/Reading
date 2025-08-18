@@ -387,7 +387,7 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
             <span id="eduBigNumber" style="font-size:clamp(40px,7vw,96px);color:#a50f15;"></span>
           </div>
         </div>`;
-      ul.parentNode.insertBefore(spacer, btn.parentNode);
+      ul.parentNode.insertBefore(spacer, btn.parentNode.nextElementSibling);
     }
     function sizeSpacer(){
       const vh = window.innerHeight || document.documentElement.clientHeight;
