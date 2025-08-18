@@ -574,6 +574,12 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
 
   // Observe cards for in-view + autoplay/pause + portrait swap
   const cards = wrap.querySelectorAll('.stories-card');
+  const videos = wrap.querySelectorAll('.stories-card video');
+  videos.forEach(v => {
+    v.addEventListener('play', () => {
+      videos.forEach(o => { if (o !== v) o.pause(); });
+    });
+  });
   let lastBG = '';
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
@@ -595,7 +601,12 @@ function makeTopLineScrubber(topRatio = 0.7, travelRatio = 0.5) {
           lastBG = url;
         }
 
-        if (v) { try { v.play(); } catch(_){} }
+        if (v) {
+          try {
+            v.muted = false;
+            v.play();
+          } catch(_){ }
+        }
       } else {
         e.target.classList.remove('in-view');
         if (v) { try { v.pause(); } catch(_){} }
